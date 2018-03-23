@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -59,9 +60,30 @@ public class VehicleTerminalService {
 		}
 	}
 	
+	public void removeVehicleTerminals() {
+		vehicleTerminals.keySet().forEach(sn -> {
+			vehicleTerminals.remove(sn).shutdown();
+		});
+	}
+	
+	@PreDestroy
+	public void preDestory() { 
+		removeVehicleTerminals();
+		scheduledExecutorService.shutdown(); 
+		try {
+			scheduledExecutorService.awaitTermination(10, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			e.printStackTrace(); 
+		}
+		scheduledExecutorService.shutdownNow();
+		System.out.println("release scheduledExecutorService resources");
+	} 
+	
 	public void exeCommand(String sn, String command, String param) {
 		if (vehicleTerminals.containsKey(sn)) {
 			vehicleTerminals.get(sn).exeCommand(command, param);
+		} else {
+			throw new RuntimeException("vehicle sn not exists");
 		}
 	}
 	

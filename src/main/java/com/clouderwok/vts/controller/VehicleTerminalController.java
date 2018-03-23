@@ -30,6 +30,7 @@ public class VehicleTerminalController {
 	@Autowired
 	private VehicleTerminalService vehicleTerminalService;
 	
+	@Autowired
 	private ObjectMapper objectMapper;
 	
 	@PostMapping(path = "/add/{sn}")
@@ -42,9 +43,10 @@ public class VehicleTerminalController {
 		return ResHelper.success();
 	}
 	
-	@PostMapping(path = "/receive/{msg}/{timestamp}")
+	@PostMapping(path = "/rc/{msg}/{timestamp}")
 	public Map<String, Object> onPostReceive(@PathVariable(name = "msg", required = true) String msg, @PathVariable(name = "timestamp", required = true) String timestamp) throws JsonParseException, JsonMappingException, IOException {
 		String message = new String(Base64.decodeBase64(msg), "utf-8");
+		System.out.println(message);
 		MarsboxReceiveMessage marsboxReceiveMessage = objectMapper.readValue(message, MarsboxReceiveMessage.class);
 		if (marsboxReceiveMessage != null) {
 			vehicleTerminalService.exeCommand(marsboxReceiveMessage.getSn(), marsboxReceiveMessage.getAtcmd(), null);

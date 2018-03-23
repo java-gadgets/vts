@@ -42,18 +42,6 @@ public class MarsboxElectricVehicleTerminal extends VehicleTerminal {
 		data.setPostion(vehicle.getPosition());
 	}
 
-	private String getRealtimeData() {
-		StringBuilder body = getRealtimeDataBody();
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("$E6")
-		.append(',').append(vehicle.getSn())
-		.append(',').append(24)
-		.append(',').append(body.length())
-		.append(',').append(body)
-		.append("\r\n");
-		return stringBuilder.toString();
-	}
-
 	private StringBuilder getRealtimeDataBody() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(Util.formateDateTime(data.getDate()))
@@ -78,28 +66,60 @@ public class MarsboxElectricVehicleTerminal extends VehicleTerminal {
 		.append(',').append(0);
 		return stringBuilder;
 	}
+	
+	private String getData(String cmd, StringBuilder body) {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("$E6")
+		.append(',').append(vehicle.getSn())
+		.append(',').append(cmd)
+		.append(',').append(body.length())
+		.append(',').append(body)
+		.append("\r\n");
+		return stringBuilder.toString();
+	}
+	
+	private String getData(String cmd, String body) {
+		return getData(cmd, new StringBuilder(body));
+	}
 
 	@Override
 	public void sendRealtimeData() {
-		send(vehicle.getSn(), "24", nextData());
+		send("24", nextData());
 	}
 
 	private String nextData() {
 		data.setDate(new Date());
-		return getRealtimeData();
+		return getData("24", getRealtimeDataBody());
 	}
 
 	@Override
 	public void exeCommand(String command, String param) {
-		System.out.println(command);
-		
+		String[] cmds = command.split("__");
+		switch(cmds[1]) {
+			case "C06": //双闪
+				commandResponse("33", "C06,500");
+				break;
+			case "SCVBR": //用车
+				commandResponse("36", Util.formateDateTime(data.getDate()) + ",3,200");
+				break;
+			case "SCVRT": //还车
+				commandResponse("36", Util.formateDateTime(data.getDate()) + ",4,200");
+				break;
+			default:
+				System.out.println("invalid command [" + command + "]");
+		}
 	}
 
-	private void send(String sn, String cmd, String message) {
+	private void commandResponse(String cmd, String body) {
+		send(cmd, getData(cmd, body));
+	}
+	
+	private void send(String cmd, String message) {
 		try {
 			HttpClient httpClient = HttpClients.createDefault();
+			System.out.println("send message: " + message);
 			String encryptMessage = Base64.encodeBase64URLSafeString(message.getBytes("utf-8"));
-			String url = StringUtils.joinWith("/", urlPrefix, sn, new Date().getTime(), cmd, encryptMessage);
+			String url = StringUtils.joinWith("/", urlPrefix, vehicle.getSn(), new Date().getTime(), cmd, encryptMessage);
 			httpClient.execute(new HttpPost(url));
 		} catch (IOException e) {
 			e.printStackTrace();

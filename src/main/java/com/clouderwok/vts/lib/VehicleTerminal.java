@@ -42,10 +42,10 @@ public abstract class VehicleTerminal implements Runnable {
 
 	@Override
 	public void run() {
-		this.sendRealtimeData();
 		if (this.interval > 0) {
 			scheduledExecutorService.schedule(this, this.interval, TimeUnit.SECONDS);
 		}
+		this.sendRealtimeData();
 	}
 	
 	public Vehicle getVehicle() {
