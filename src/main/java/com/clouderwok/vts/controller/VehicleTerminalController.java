@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class VehicleTerminalController {
 		return ResHelper.success();
 	}
 	
-	@PostMapping(path = "/rc/{msg}/{timestamp}")
+	@GetMapping(path = "/rc/{msg}/{timestamp}")
 	public Map<String, Object> onPostReceive(@PathVariable(name = "msg", required = true) String msg, @PathVariable(name = "timestamp", required = true) String timestamp) throws JsonParseException, JsonMappingException, IOException {
 		String message = new String(Base64.decodeBase64(msg), "utf-8");
 		System.out.println(message);

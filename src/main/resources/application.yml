@@ -8,6 +8,7 @@ server:
       enabled: true
       force: true
       charset: UTF-8
+  port: 8080
 
 vts:
   store.file: E:/work/vts/data/vts.data
