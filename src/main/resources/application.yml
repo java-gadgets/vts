@@ -1,0 +1,19 @@
+spring:
+  jackson:
+    defaultPropertyInclusion: NON_NULL
+
+server:    
+  http:
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+
+vts:
+  store.file: E:/work/vts/data/vts.data
+  threadPool.size: 10
+  vehicle.interval.on: 10
+  vehicle.interval.off: 60
+  marsbox:
+    report.url.prefix: http://xcx.yunzujia.com.cn/deviceservice/devicereport
+    
