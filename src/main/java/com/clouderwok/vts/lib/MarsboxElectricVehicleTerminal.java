@@ -96,6 +96,9 @@ public class MarsboxElectricVehicleTerminal extends VehicleTerminal {
 	public void exeCommand(String command, String param) {
 		String[] cmds = command.split("__");
 		switch(cmds[1]) {
+			case "C01": //开锁
+				commandResponse("33", "C01,500");
+				break;
 			case "C06": //双闪
 				commandResponse("33", "C06,500");
 				break;
