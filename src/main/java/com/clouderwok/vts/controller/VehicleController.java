@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clouderwok.vts.bean.Vehicle;
 import com.clouderwok.vts.service.VehicleService;
+import com.clouderwok.vts.service.VehicleTerminalService;
 import com.clouderwok.vts.utils.ResHelper;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -28,6 +29,9 @@ public class VehicleController {
 	@Autowired
 	private VehicleService vehicleService;
 	
+	@Autowired
+	private VehicleTerminalService vehicleTerminalService;
+	
 	@GetMapping(path = "/list")
 	public Map<String, Object> onGetQuery(HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException{
 		return ResHelper.success(vehicleService.getVehicles());
@@ -36,6 +40,9 @@ public class VehicleController {
 	@PostMapping(path="/save", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> onPostSave(@RequestBody Vehicle vehicle) throws JsonGenerationException, JsonMappingException, IOException {
 		vehicleService.addVehicle(vehicle);
+		if (vehicle.getAutoStartup() == 1) {
+			vehicleTerminalService.addVehicleTerminal(vehicle);
+		}
 		return ResHelper.success();
 	}
 	
