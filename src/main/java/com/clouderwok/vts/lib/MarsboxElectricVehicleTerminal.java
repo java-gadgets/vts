@@ -9,8 +9,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.tomcat.util.codec.binary.Base64;
 
-import com.clouderwok.vts.Util;
 import com.clouderwok.vts.bean.ElectricVehicleData;
+import com.clouderwok.vts.utils.Util;
 
 public class MarsboxElectricVehicleTerminal extends VehicleTerminal {
 	
