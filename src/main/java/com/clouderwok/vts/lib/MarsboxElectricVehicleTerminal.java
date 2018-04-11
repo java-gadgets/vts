@@ -2,6 +2,7 @@ package com.clouderwok.vts.lib;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
@@ -99,7 +100,10 @@ public class MarsboxElectricVehicleTerminal extends VehicleTerminal {
 			case "C01": //开锁
 				commandResponse("33", "C01,500");
 				break;
-			case "C06": //双闪
+			case "C81": //落锁
+				commandResponse("33", "C81,500");
+			break;
+			case "C06": //寻车（双闪）
 				commandResponse("33", "C06,500");
 				break;
 			case "SCVBR": //用车
@@ -114,7 +118,19 @@ public class MarsboxElectricVehicleTerminal extends VehicleTerminal {
 	}
 
 	private void commandResponse(String cmd, String body) {
-		send(cmd, getData(cmd, body));
+		int cmdResTime = vehicle.getCmdResTime();
+		if(cmdResTime > 0) {
+			if (vehicle.getCmdResRandom() == 1) {
+				cmdResTime = (int) (Math.random() * vehicle.getCmdResTime()) + 1;
+			}
+			System.out.println("vehicle [" + vehicle.getPlate() + "] cmd res time: [" + cmdResTime + "] second(s)");
+			scheduledExecutorService.schedule(()-> {
+				send(cmd, getData(cmd, body));
+			}, cmdResTime, TimeUnit.SECONDS);
+		} else {
+			send(cmd, getData(cmd, body));
+		}
+		
 	}
 	
 	private void send(String cmd, String message) {

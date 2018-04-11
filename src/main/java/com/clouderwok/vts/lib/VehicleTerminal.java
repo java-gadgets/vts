@@ -17,7 +17,7 @@ public abstract class VehicleTerminal implements Runnable {
 	protected int status = 0;
 	protected int interval;
 	
-	private ScheduledExecutorService scheduledExecutorService;
+	protected ScheduledExecutorService scheduledExecutorService;
 	
 	public VehicleTerminal() {
 		super();

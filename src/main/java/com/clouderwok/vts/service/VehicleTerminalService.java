@@ -53,6 +53,13 @@ public class VehicleTerminalService {
 		vehicleTerminals.put(vehicle.getSn(), vehicleTerminal);
 	}
 	
+	public void syncVehicleData(Vehicle vehicle) {
+		if (!vehicleTerminals.containsKey(vehicle.getSn())) {
+			return;
+		}
+		vehicleTerminals.get(vehicle.getSn()).setVehicle(vehicle);;
+	}
+	
 	public void removeVehicleTerminal(Vehicle vehicle) {
 		VehicleTerminal vehicleTerminal = vehicleTerminals.remove(vehicle.getSn());
 		if (vehicleTerminal != null) {

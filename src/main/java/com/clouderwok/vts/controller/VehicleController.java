@@ -43,6 +43,7 @@ public class VehicleController {
 		if (vehicle.getAutoStartup() == 1) {
 			vehicleTerminalService.addVehicleTerminal(vehicle);
 		}
+		vehicleTerminalService.syncVehicleData(vehicle);
 		return ResHelper.success();
 	}
 	
