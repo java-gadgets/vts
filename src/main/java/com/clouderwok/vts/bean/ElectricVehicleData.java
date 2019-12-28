@@ -1,5 +1,7 @@
 package com.clouderwok.vts.bean;
 
+import java.util.Date;
+
 public class ElectricVehicleData extends VehicleData {
 	/**
 	 * 总电压
@@ -68,6 +70,27 @@ public class ElectricVehicleData extends VehicleData {
 
 	public void setChargingState(Integer chargingState) {
 		this.chargingState = chargingState;
+	}
+	
+	public static ElectricVehicleData getDefault(Position position) {
+		ElectricVehicleData data = new ElectricVehicleData();
+		data.setDate(new Date());
+		data.setKeyStatus(1);//1：OFF 2：ON 255：未知
+		data.setDoorStatus(0);//0关闭，1未关闭
+		data.setGearStatus(1);//1:P档，2：R档，3：N档，4：D档，255：未知
+		data.setSpeed(0.0);
+		data.setOdo(1000);
+		data.setBatteryVoltage(24.0D);
+		data.setVoltage(0.0D);
+		data.setElectricity(0.0D);
+		data.setBatteryPercent(80.0D);
+		data.setEnduranceMileage(150);
+		data.setChargingState(0);//0未充电，1充电中
+		data.setNsv(0);
+		data.setPositioningState(1);//0：未定位，1:已定位
+		data.setEsc(6);
+		data.setPostion(position);
+		return data;
 	}
 	
 }

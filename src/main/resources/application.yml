@@ -11,7 +11,9 @@ server:
   port: 8080
 
 vts:
-  store.file: E:/work/vts/data/vts.data
+  store:
+    path: E:/work/vts/data
+    file: E:/work/vts/data/vts.data
   threadPool.size: 10
   vehicle.interval.on: 10
   vehicle.interval.off: 60

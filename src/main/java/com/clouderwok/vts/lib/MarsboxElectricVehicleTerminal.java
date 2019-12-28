@@ -139,6 +139,7 @@ public class MarsboxElectricVehicleTerminal extends VehicleTerminal {
 			System.out.println("send message: " + message);
 			String encryptMessage = Base64.encodeBase64URLSafeString(message.getBytes("utf-8"));
 			String url = StringUtils.joinWith("/", urlPrefix, vehicle.getSn(), new Date().getTime(), cmd, encryptMessage);
+			System.out.println(url);
 			httpClient.execute(new HttpPost(url));
 		} catch (IOException e) {
 			e.printStackTrace();
